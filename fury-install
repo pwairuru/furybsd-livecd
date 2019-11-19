@@ -14,10 +14,13 @@ bsdinstall zfsboot
 if [ ! -d "/mnt/usr" ] ; then
   exit 1
 fi
-chflags -R nodump /usr/home/liveuser
-chflags -R nodump /var/run/user/1000
-su -m root -c 'cd /mnt && dump -0af - /dev/md1.uzip | restore -rf -'
-su -m root -c 'cd /mnt && dump -L0af - /dev/md2 | restore -Dyrf -'
+
+# Clone the file system to disk with cpdup
+cpdup -o -X /home/liveuser/furybsd-install-exclude / /mnt
+cpdup -o -X /home/liveuser/furybsd-install-exclude /etc /mnt/etc
+cpdup -o -X /home/liveuser/furybsd-install-exclude /usr/home /mnt/usr/home
+cpdup -o -X /home/liveuser/furybsd-install-exclude /var /mnt/usr/var
+
 bsdinstall config
 cat /etc/rc.conf | xargs sysrc -f /mnt/etc/rc.conf
 bsdinstall entropy
