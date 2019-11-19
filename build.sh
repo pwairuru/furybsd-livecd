@@ -17,6 +17,11 @@ vol="furybsd"
 label="FURYBSD"
 isopath="${iso}/${vol}.iso"
 desktop=$1
+export DISTRIBUTIONS="kernel.txz base.txz"
+export BSDINSTALL_DISTSITE="http://ftp.freebsd.org/pub/FreeBSD/releases/amd64/12.0-RELEASE/"
+export BSDINSTALL_CHROOT="/usr/local/furybsd/uzip"
+export BSDINSTALL_DISTDIR="/usr/local/furybsd/cache/12.0/base"
+
 
 # Only run as superuser
 if [ "$(id -u)" != "0" ]; then
@@ -64,18 +69,15 @@ workspace()
 base()
 {
   if [ ! -f "${base}/base.txz" ] ; then 
-    cd ${base}
-    fetch http://ftp.freebsd.org/pub/FreeBSD/releases/amd64/${version}-RELEASE/base.txz
+    bsdinstall distfetch
   fi
   
   if [ ! -f "${base}/kernel.txz" ] ; then
     cd ${base}
-    fetch http://ftp.freebsd.org/pub/FreeBSD/releases/amd64/${version}-RELEASE/kernel.txz
+    bsdinstall distfetch
   fi
-  cd ${base}
-  tar -zxvf base.txz -C ${uzip}
-  tar -zxvf kernel.txz -C ${uzip}
-  touch ${uzip}/etc/fstab
+  bsdinstall distextract
+  echo "/dev/iso9660/FURYBSD / cd9660 ro 0 0" > ${uzip}/etc/fstab
 }
 
 packages()
@@ -193,12 +195,39 @@ dm()
   esac
 }
 
+loader()
+{
+  chroot ${uzip} touch /boot/loader.conf
+  chroot ${uzip} sysrc -f /boot/loader.conf init_path="/rescue/init"
+  chroot ${uzip} sysrc -f /boot/loader.conf init_shell="/rescue/sh"
+  chroot ${uzip} sysrc -f /boot/loader.conf init_script="/init.sh"
+  chroot ${uzip} sysrc -f /boot/loader.conf init_chroot="/"
+  cp ${cwd}/overlays/ramdisk/init-nochroot.sh ${uzip}/init.sh
+}
+
+tar()
+{
+  chroot ${uzip} tar -zcf /etc.txz -C /etc .
+  chroot ${uzip} tar -zcf /var.txz -C /var .
+  chroot ${uzip} tar -zcf /home.txz -C /usr/home .
+  chroot ${uzip} rm -rf /etc
+  chroot ${uzip} rm -rf /var
+  chroot ${uzip} rm -rf /usr/home
+  chroot ${uzip} mkdir /etc
+  chroot ${uzip} mkdir /var
+  chroot ${uzip} mkdir /usr/home
+}
+
 uzip() 
 {
   install -o root -g wheel -m 755 -d "${cdroot}"
-  makefs "${cdroot}/data/system.ufs" "${uzip}"
+  makefs "${cdroot}/data/system.ufs" "${uzip}/usr/local"
   mkuzip -o "${cdroot}/data/system.uzip" "${cdroot}/data/system.ufs"
   rm -f "${cdroot}/data/system.ufs"
+  rm -rf ${uzip}/usr/local
+  mkdir ${uzip}/usr/local
+  mkdir ${uzip}/cdrom
+  mkdir ${uzip}/memdisk
 }
 
 ramdisk() 
@@ -223,7 +252,8 @@ boot()
 
 image() 
 {
-  sh ${cwd}/scripts/mkisoimages.sh -b $label $isopath ${cdroot}
+  # sh ${cwd}/scripts/mkisoimages.sh -b $label $isopath ${cdroot}
+  sh ${cwd}/scripts/mkisoimages.sh -b $label $isopath ${uzip}
 }
 
 cleanup()
@@ -237,13 +267,15 @@ cleanup()
 workspace
 base
 packages
-ports
+#ports
 rc
 dm
 live-settings
 user
+loader
+tar
 uzip
-ramdisk
-boot
+#ramdisk
+#boot
 image
 cleanup
