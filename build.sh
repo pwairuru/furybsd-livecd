@@ -198,6 +198,7 @@ dm()
 loader()
 {
   chroot ${uzip} touch /boot/loader.conf
+  chroot ${uzip} sysrc -f /boot/loader.conf geom_uzip_load="YES"
   chroot ${uzip} sysrc -f /boot/loader.conf init_path="/rescue/init"
   chroot ${uzip} sysrc -f /boot/loader.conf init_shell="/rescue/sh"
   chroot ${uzip} sysrc -f /boot/loader.conf init_script="/init.sh"
@@ -222,11 +223,10 @@ uzip()
 {
   install -o root -g wheel -m 755 -d "${cdroot}"
   makefs "${cdroot}/data/system.ufs" "${uzip}/usr/local"
-  mkuzip -o "${cdroot}/data/system.uzip" "${cdroot}/data/system.ufs"
+  mkuzip -o "${uzip}/system.uzip" "${cdroot}/data/system.ufs"
   rm -f "${cdroot}/data/system.ufs"
   rm -rf ${uzip}/usr/local
   mkdir ${uzip}/usr/local
-  mkdir ${uzip}/cdrom
   mkdir ${uzip}/memdisk
 }
 
