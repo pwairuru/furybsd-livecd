@@ -58,6 +58,8 @@ isopath="${iso}/${vol}.iso"
 workspace()
 {
   umount ${uzip}/var/cache/pkg >/dev/null 2>/dev/null
+  rm -rf ${cache}/furybsd-ports-master/
+  rm ${cache}/master.zip
   umount ${uzip}/dev >/dev/null 2>/dev/null
   if [ -d "${livecd}" ] ;then
     chflags -R noschg ${uzip} ${cdroot} >/dev/null 2>/dev/null
