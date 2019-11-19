@@ -101,7 +101,7 @@ ports()
     portsnap fetch extract
   fi
   cd ${cache} && fetch https://github.com/furybsd/furybsd-ports/archive/master.zip
-  cd ${cache} && tar -xf master.zip
+  cd ${cache} && unzip master.zip
   cd ${cache}/furybsd-ports-master && ./mkport.sh x11-themes/furybsd-wallpapers
   cd ${ports}/x11-themes/furybsd-wallpapers && make package
   cp ${ports}/x11-themes/furybsd-wallpapers/work/pkg/* ${uzip}
@@ -233,7 +233,7 @@ cleanup()
 workspace
 base
 packages
-#ports
+ports
 rc
 dm
 live-settings
