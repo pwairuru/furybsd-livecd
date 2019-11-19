@@ -16,8 +16,10 @@ done
 mount -t tmpfs tmpfs /etc
 mount -t tmpfs tmpfs /tmp
 mount -t tmpfs tmpfs /var
+mount -t tmpfs tmpfs /boot/modules
 tar -xf /etc.txz -C /etc
 tar -xf /var.txz -C /var
+tar -xf /modules.txz -C /boot/modules
 
 echo "==> Mount cdrom"
 mdmfs -P -F /system.uzip -o ro md.uzip /usr
@@ -51,10 +53,10 @@ export VMGUEST
 
 if [ "${VMGUEST}" = "xen" ]; then
   echo "XEN guest detected"
-  sysrc devd_enable="NO"
+  /usr/sbin/sysrc devd_enable="NO"
 fi
 
-sysrc -f /etc/rc.conf kld_list+="sysctlinfo"
+/usr/sbin/sysrc -f /etc/rc.conf kld_list+="sysctlinfo"
 
 if [ "$SINGLE_USER" = "true" ]; then
 	echo "Starting interactive shell in temporary rootfs ..."

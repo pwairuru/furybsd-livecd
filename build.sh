@@ -201,11 +201,15 @@ tar()
 {
   chroot ${uzip} tar -zcf /etc.txz -C /etc .
   chroot ${uzip} tar -zcf /var.txz -C /var .
+  chroot ${uzip} tar -zcf /modules.txz -C /boot/modules .
   chroot ${uzip} rm -rf /etc
   chroot ${uzip} chflags -R noschg /var
   chroot ${uzip} rm -rf /var
+  chroot ${uzip} chflags -R noschg /boot/modules
+  chroot ${uzip} rm -rf /boot/modules
   chroot ${uzip} mkdir /etc
   chroot ${uzip} mkdir /var
+  chroot ${uzip} /boot/modules
 }
 
 uzip() 
@@ -214,6 +218,7 @@ uzip()
   makefs "${cdroot}/data/system.ufs" "${uzip}/usr"
   mkuzip -o "${uzip}/system.uzip" "${cdroot}/data/system.ufs"
   rm -f "${cdroot}/data/system.ufs"
+  chflags -R noschg ${uzip}/usr
   rm -rf ${uzip}/usr
   mkdir ${uzip}/usr
   mkdir ${uzip}/memdisk
