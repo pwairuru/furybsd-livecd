@@ -14,15 +14,13 @@ while : ; do
 done
 
 mount -t tmpfs tmpfs /etc
-mount -t tmpfs tmpfs /usr/home
 mount -t tmpfs tmpfs /tmp
 mount -t tmpfs tmpfs /var
 tar -xf /etc.txz -C /etc
-tar -xf /home.txz -C /usr/home
 tar -xf /var.txz -C /var
 
 echo "==> Mount cdrom"
-mdmfs -P -F /system.uzip -o ro md.uzip /usr/local
+mdmfs -P -F /system.uzip -o ro md.uzip /usr
 
 if [ "$SINGLE_USER" = "true" ]; then
 	echo -n "Enter memdisk size used for read-write access in the live system: "
@@ -33,7 +31,7 @@ fi
 
 echo "==> Mount swap-based memdisk"
 mdmfs -s "${MEMDISK_SIZE}m" md /memdisk || exit 1
-mount -t unionfs /memdisk /usr/local
+mount -t unionfs /memdisk /usr
 
 BOOTMODE=`sysctl -n machdep.bootmethod`
 export BOOTMODE

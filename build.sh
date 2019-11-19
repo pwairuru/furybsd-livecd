@@ -105,9 +105,6 @@ ports()
   cd ${cache}/furybsd-ports-master && ./mkport.sh x11-themes/furybsd-wallpapers
   cd ${ports}/x11-themes/furybsd-wallpapers && make package
   cp ${ports}/x11-themes/furybsd-wallpapers/work/pkg/* ${uzip}
-  #cd ${cache}/furybsd-ports-master && ./mkport.sh net-mgmt/furybsd-wifi-tool
-  #cd ${ports}/net-mgmt/furybsd-wifi-tool && make package
-  #cp ${ports}/net-mgmt/furybsd-wifi-tool/work/pkg/* ${uzip}
   cd ${cache}/furybsd-ports-master && ./mkport.sh sysutils/furybsd-dsbdriverd
   cd ${ports}/sysutils/furybsd-dsbdriverd && make package
   cp ${ports}/sysutils/furybsd-dsbdriverd/work/pkg/* ${uzip}
@@ -159,11 +156,8 @@ live-settings()
 user()
 {
   mkdir -p ${uzip}/usr/home/liveuser/Desktop
-  cp ${cwd}/fury-config-wifi ${uzip}/usr/home/liveuser/
   cp ${cwd}/fury-install ${uzip}/usr/home/liveuser/
   cp -R ${cwd}/xorg.conf.d/ ${uzip}/usr/home/liveuser/xorg.conf.d
-  #cp ${cwd}/fury-config-netdev.desktop ${uzip}/usr/home/liveuser/Desktop/
-  #cp ${cwd}/fury-config-wifi.desktop ${uzip}/usr/home/liveuser/Desktop/
   cp ${cwd}/fury-config-xorg.desktop ${uzip}/usr/home/liveuser/Desktop/
   cp ${cwd}/fury-install.desktop ${uzip}/usr/home/liveuser/Desktop/
   cp ${cwd}/fury-sysinfo.desktop ${uzip}/usr/home/liveuser/Desktop/
@@ -205,29 +199,26 @@ tar()
 {
   chroot ${uzip} tar -zcf /etc.txz -C /etc .
   chroot ${uzip} tar -zcf /var.txz -C /var .
-  chroot ${uzip} tar -zcf /home.txz -C /usr/home .
   chroot ${uzip} rm -rf /etc
+  chroot ${uzip} chflags -R noschg /var
   chroot ${uzip} rm -rf /var
-  chroot ${uzip} rm -rf /usr/home
   chroot ${uzip} mkdir /etc
   chroot ${uzip} mkdir /var
-  chroot ${uzip} mkdir /usr/home
 }
 
 uzip() 
 {
   install -o root -g wheel -m 755 -d "${cdroot}"
-  makefs "${cdroot}/data/system.ufs" "${uzip}/usr/local"
+  makefs "${cdroot}/data/system.ufs" "${uzip}/usr"
   mkuzip -o "${uzip}/system.uzip" "${cdroot}/data/system.ufs"
   rm -f "${cdroot}/data/system.ufs"
-  rm -rf ${uzip}/usr/local
-  mkdir ${uzip}/usr/local
+  rm -rf ${uzip}/usr
+  mkdir ${uzip}/usr
   mkdir ${uzip}/memdisk
 }
 
 image() 
 {
-  # sh ${cwd}/scripts/mkisoimages.sh -b $label $isopath ${cdroot}
   sh ${cwd}/scripts/mkisoimages.sh -b $label $isopath ${uzip}
 }
 
@@ -242,7 +233,7 @@ cleanup()
 workspace
 base
 packages
-ports
+#ports
 rc
 dm
 live-settings
