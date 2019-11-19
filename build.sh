@@ -209,7 +209,7 @@ tar()
   chroot ${uzip} rm -rf /boot/modules
   chroot ${uzip} mkdir /etc
   chroot ${uzip} mkdir /var
-  chroot ${uzip} /boot/modules
+  chroot ${uzip} mkdir /boot/modules
 }
 
 uzip() 
