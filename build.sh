@@ -225,26 +225,6 @@ uzip()
   mkdir ${uzip}/memdisk
 }
 
-ramdisk() 
-{
-  cp -R ${cwd}/overlays/ramdisk/ ${ramdisk_root}
-  cd "${uzip}" && tar -cf - rescue | tar -xf - -C "${ramdisk_root}"
-  touch "${ramdisk_root}/etc/fstab"
-  cp ${uzip}/etc/login.conf ${ramdisk_root}/etc/login.conf
-  makefs -b '10%' "${cdroot}/data/ramdisk.ufs" "${ramdisk_root}"
-  gzip "${cdroot}/data/ramdisk.ufs"
-  rm -rf "${ramdisk_root}"
-}
-
-boot() 
-{
-  cp -R ${cwd}/overlays/boot/ ${cdroot}
-  cd "${uzip}" && tar -cf - --exclude boot/kernel boot | tar -xf - -C "${cdroot}"
-  for kfile in kernel geom_uzip.ko nullfs.ko tmpfs.ko unionfs.ko; do
-  tar -cf - boot/kernel/${kfile} | tar -xf - -C "${cdroot}"
-  done
-}
-
 image() 
 {
   # sh ${cwd}/scripts/mkisoimages.sh -b $label $isopath ${cdroot}
@@ -262,7 +242,7 @@ cleanup()
 workspace
 base
 packages
-#ports
+ports
 rc
 dm
 live-settings
@@ -270,7 +250,5 @@ user
 loader
 tar
 uzip
-#ramdisk
-#boot
 image
 cleanup
