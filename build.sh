@@ -197,13 +197,8 @@ dm()
 
 loader()
 {
-  chroot ${uzip} touch /boot/loader.conf
-  chroot ${uzip} sysrc -f /boot/loader.conf geom_uzip_load="YES"
-  chroot ${uzip} sysrc -f /boot/loader.conf init_path="/rescue/init"
-  chroot ${uzip} sysrc -f /boot/loader.conf init_shell="/rescue/sh"
-  chroot ${uzip} sysrc -f /boot/loader.conf init_script="/init.sh"
-  chroot ${uzip} sysrc -f /boot/loader.conf init_chroot="/"
-  cp ${cwd}/overlays/ramdisk/init-nochroot.sh ${uzip}/init.sh
+  cp ${cwd}/overlays/boot/boot/loader.conf ${uzip}/boot/loader.conf
+  cp ${cwd}/overlays/ramdisk/init.sh ${uzip}/init.sh
 }
 
 tar()
