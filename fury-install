@@ -16,10 +16,10 @@ if [ ! -d "/mnt/usr" ] ; then
 fi
 
 # Clone the file system to disk with cpdup
-cpdup -o -v -X /home/liveuser/furybsd-install-exclude / /mnt
-cpdup -o -v -X /home/liveuser/furybsd-install-exclude /etc /mnt/etc
-cpdup -o -v -X /home/liveuser/furybsd-install-exclude /usr/home /mnt/usr/home
-cpdup -o -v -X /home/liveuser/furybsd-install-exclude /var /mnt/usr/var
+cpdup -o -vvv -u -X /home/liveuser/furybsd-install-exclude / /mnt
+cpdup -o -vvv -u -X /home/liveuser/furybsd-install-exclude /etc /mnt/etc
+cpdup -o -vvv -u -X /home/liveuser/furybsd-install-exclude /usr/home /mnt/usr/home
+cpdup -o -vvv -u -X /home/liveuser/furybsd-install-exclude /var /mnt/usr/var
 
 bsdinstall config
 cat /etc/rc.conf | xargs sysrc -f /mnt/etc/rc.conf
