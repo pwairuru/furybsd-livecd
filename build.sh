@@ -159,7 +159,6 @@ user()
 {
   mkdir -p ${uzip}/usr/home/liveuser/Desktop
   cp ${cwd}/fury-install ${uzip}/usr/home/liveuser/
-  cp ${cwd}/fury-install-exclude ${uzip}/usr/home/liveuser/
   cp -R ${cwd}/xorg.conf.d/ ${uzip}/usr/home/liveuser/xorg.conf.d
   cp ${cwd}/fury-config-xorg.desktop ${uzip}/usr/home/liveuser/Desktop/
   cp ${cwd}/fury-install.desktop ${uzip}/usr/home/liveuser/Desktop/
@@ -203,12 +202,14 @@ tar()
   chroot ${uzip} tar -zcf /etc.txz -C /etc .
   chroot ${uzip} tar -zcf /var.txz -C /var .
   chroot ${uzip} tar -zcf /modules.txz -C /boot/modules .
+  chroot ${uzip} mv /etc/login.conf /login.conf.bak
   chroot ${uzip} rm -rf /etc
   chroot ${uzip} chflags -R noschg /var
   chroot ${uzip} rm -rf /var
   chroot ${uzip} chflags -R noschg /boot/modules
   chroot ${uzip} rm -rf /boot/modules
   chroot ${uzip} mkdir /etc
+  chroot ${uzip} mv /login.conf.bak /etc/login.conf
   chroot ${uzip} mkdir /var
   chroot ${uzip} mkdir /boot/modules
 }
