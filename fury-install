@@ -22,6 +22,7 @@ cpdup -i0 -s0 -vvv /etc /mnt/etc
 cpdup -i0 -s0 -vvv /usr /mnt/usr
 cpdup -i0 -s0 -vvv /usr/home /mnt/usr/home
 cpdup -i0 -s0 -vvv /var /mnt/var
+cpdup -i0 -s0 -vvv /compat /mnt/compat
 
 bsdinstall config
 cat /etc/rc.conf | xargs sysrc -f /mnt/etc/rc.conf

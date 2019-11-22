@@ -17,6 +17,7 @@ mount -t tmpfs tmpfs /etc
 mount -t tmpfs tmpfs /tmp
 mount -t tmpfs tmpfs /var
 mount -t tmpfs tmpfs /boot/modules
+mount -t tmpfs tmpfs /compat
 tar -xf /etc.txz -C /etc
 tar -xf /var.txz -C /var
 tar -xf /modules.txz -C /boot/modules

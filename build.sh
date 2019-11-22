@@ -212,6 +212,7 @@ tar()
   chroot ${uzip} mv /login.conf.bak /etc/login.conf
   chroot ${uzip} mkdir /var
   chroot ${uzip} mkdir /boot/modules
+  chroot ${uzip} mkdir /compat
 }
 
 uzip() 
