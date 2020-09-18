@@ -250,6 +250,7 @@ image()
 cleanup()
 {
 if [ ! -z "${CI}" ] ; then
+  zpool destroy -f furybsd
   # On CI systems there is no reason to clean up which takes time
   return
 fi
