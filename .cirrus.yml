@@ -11,6 +11,7 @@ env:
 task:
   stateful: false
   timeout_in: 60m
+  only_if: $CIRRUS_TAG != 'continuous'
 
   env:
     matrix:
