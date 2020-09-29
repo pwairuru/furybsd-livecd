@@ -135,8 +135,10 @@ class InstallWizard(QtWidgets.QWizard, object):
         # Remove window decorations, especially the close button
         self.setWindowFlags(QtCore.Qt.CustomizeWindowHint)
         self.setWindowFlags(QtCore.Qt.FramelessWindowHint)
-
-        self.setPixmap(QtWidgets.QWizard.BackgroundPixmap, QtGui.QPixmap(os.path.dirname(__file__) + '/Background.png'))
+        # self.setPixmap(QtWidgets.QWizard.BackgroundPixmap, os.path.dirname(__file__) + '/Background.png') # This works in PySide2
+        pxmp = QtGui.QPixmap(os.path.dirname(__file__) + '/Background.png')
+        print("pxmp.height()", pxmp.height()) # FIXME: This shows that we have the pixmap loaded
+        self.setPixmap(QtWidgets.QWizard.WatermarkPixmap, pxmp) # FIXME: Why is this not working in PyQt5?
 
         self.setOption(QtWidgets.QWizard.ExtendedWatermarkPixmap, True)
         # self.setPixmap(QtWidgets.QWizard.LogoPixmap, 'Logo.png')
