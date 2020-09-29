@@ -2,4 +2,3 @@ overlays/uzip/furybsd-common-settings
 overlays/uzip/furybsd-wallpapers/files/*
 *.save*
 *~
-*.idea*
