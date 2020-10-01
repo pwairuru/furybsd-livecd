@@ -1,0 +1,4 @@
+freeswitch_enable="YES"
+php_enable="YES"
+nginx_enable="YES"
+postgresql_enable="YES"
